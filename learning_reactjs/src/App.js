@@ -1,29 +1,26 @@
 // import "./App.css";
 
-import { useEffect, useState } from "react";
-import PostForm from "./features/Post/PostForm/components";
-import PostList from "./features/Post/PostList/components";
-import { GetAllPostAPI } from "./features/Post/PostServices/PostService";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import Login from "./features/Note/components/Login";
+import Post from "./features/Post";
+import NoteHome from "./features/Note/components/NoteHome";
+import AuthProvider from "./features/Note/contexts/AuthProvider";
+import AppProvider from "./features/Note/contexts/AppProvider";
+import AddNoteModal from "./features/Note/components/Modals/AddNoteModal";
 
 function App() {
-  const [postList, setPostList] = useState([]);
-
-  const getAllPost = async () => {
-    try {
-      const res = await GetAllPostAPI();
-      setPostList(res.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-  useEffect(() => {
-    getAllPost();
-  }, []);
   return (
-    <div className="App">
-      <PostForm getAllPost={getAllPost} />
-      <PostList postList={postList} getAllPost={getAllPost} />
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppProvider>
+          <Routes>
+            <Route element=<Login /> path="/login" />
+            <Route element=<NoteHome /> path="/" />
+          </Routes>
+          <AddNoteModal />
+        </AppProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
